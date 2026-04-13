@@ -16,6 +16,10 @@ namespace SportsLeague.DataAccess.Context
         public DbSet<Referee> Referees => Set<Referee>();
         public DbSet<TournamentTeam> TournamentTeams => Set<TournamentTeam>();
 
+        public DbSet<Sponsor> Sponsors { get; set; }
+        public DbSet<TournamentSponsor> TournamentSponsors { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -115,6 +119,22 @@ namespace SportsLeague.DataAccess.Context
                       .IsRequired(false);
             });
 
+            // ── TournamentSponsor Configuration ──
+            modelBuilder.Entity<TournamentSponsor>(entity =>
+            {
+                entity.HasKey(ts => ts.Id);
+                entity.HasIndex(ts => new { ts.TournamentId, ts.SponsorId }).IsUnique();
+                entity.Property(ts => ts.ContractAmount).HasColumnType("decimal(18,2)");
+                entity.HasOne(ts => ts.Tournament)
+                      .WithMany(t => t.TournamentSponsors)
+                      .HasForeignKey(ts => ts.TournamentId)
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(ts => ts.Sponsor)
+                      .WithMany(s => s.TournamentSponsors)
+                      .HasForeignKey(ts => ts.SponsorId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
             // ── TournamentTeam Configuration ──
             modelBuilder.Entity<TournamentTeam>(entity =>
             {
@@ -141,6 +161,8 @@ namespace SportsLeague.DataAccess.Context
                 // Índice único compuesto: un equipo solo una vez por torneo
                 entity.HasIndex(tt => new { tt.TournamentId, tt.TeamId })
                       .IsUnique();
+
+          
             });
         }
     }
