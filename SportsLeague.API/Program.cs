@@ -35,7 +35,7 @@ builder.Services.AddScoped<ISponsorService, SponsorService>();
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
-
+builder.Services.AddScoped<IStandingsService, StandingsService>();
 builder.Services.AddControllers();
 
 
