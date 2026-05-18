@@ -51,6 +51,9 @@ builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IMatchEventService, MatchEventService>();
 builder.Services.AddScoped<MatchValidationHelper>();
 
+builder.Services.AddScoped<IMatchLineupRepository, MatchLineupRepository>();
+builder.Services.AddScoped<IMatchLineupService, MatchLineupService>();
+
 var app = builder.Build();
 
 
